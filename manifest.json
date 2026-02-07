@@ -1,0 +1,28 @@
+{
+    "name": "OCR Canvas",
+    "short_name": "OCR Canvas",
+    "description": "Draw, annotate, and extract text from images using OCR",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f0f1a",
+    "theme_color": "#6366f1",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%236366f1' width='100' height='100' rx='20'/><text x='50' y='62' font-size='50' text-anchor='middle' fill='white'>✨</text></svg>",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["productivity", "utilities"],
+    "screenshots": [],
+    "shortcuts": [
+        {
+            "name": "Extract Text",
+            "short_name": "OCR",
+            "description": "Extract text from an image",
+            "url": "/"
+        }
+    ]
+}

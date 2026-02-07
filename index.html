@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="OCR Drawing App - Extract text from images and annotate with drawing tools">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>OCR Canvas - Draw & Extract Text</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h1>OCR Canvas</h1>
+            </div>
+            <div class="header-actions">
+                <button id="undoBtn" class="icon-btn" title="Undo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 10h10a5 5 0 0 1 5 5v2M3 10l5-5M3 10l5 5" />
+                    </svg>
+                </button>
+                <button id="redoBtn" class="icon-btn" title="Redo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10H11a5 5 0 0 0-5 5v2M21 10l-5-5M21 10l-5 5" />
+                    </svg>
+                </button>
+                <button id="clearBtn" class="icon-btn danger" title="Clear Canvas">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Toolbar -->
+            <aside class="toolbar">
+                <div class="tool-group">
+                    <h3>Tools</h3>
+                    <div class="tools-grid">
+                        <button class="tool-btn active" data-tool="brush" title="Brush">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M9.06 11.9l8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08" />
+                                <path
+                                    d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
+                            </svg>
+                        </button>
+                        <button class="tool-btn" data-tool="pen" title="Pen">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                                <path d="M2 2l7.586 7.586" />
+                            </svg>
+                        </button>
+                        <button class="tool-btn" data-tool="marker" title="Highlighter">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M9 11l-6 6v3h9l3-3" />
+                                <path d="M22 12l-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4" />
+                            </svg>
+                        </button>
+                        <button class="tool-btn" data-tool="eraser" title="Eraser">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M20 20H7L3 16a1 1 0 0 1 0-1.41l9.59-9.59a2 2 0 0 1 2.82 0l5.66 5.66a2 2 0 0 1 0 2.82L12 22" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tool-group">
+                    <h3>Colors</h3>
+                    <div class="color-palette">
+                        <button class="color-btn active" data-color="#ffffff" style="background: #ffffff;"></button>
+                        <button class="color-btn" data-color="#ff6b6b" style="background: #ff6b6b;"></button>
+                        <button class="color-btn" data-color="#ffd93d" style="background: #ffd93d;"></button>
+                        <button class="color-btn" data-color="#6bcb77" style="background: #6bcb77;"></button>
+                        <button class="color-btn" data-color="#4d96ff" style="background: #4d96ff;"></button>
+                        <button class="color-btn" data-color="#9b59b6" style="background: #9b59b6;"></button>
+                        <button class="color-btn" data-color="#ff9ff3" style="background: #ff9ff3;"></button>
+                        <button class="color-btn" data-color="#000000"
+                            style="background: #000000; border: 2px solid #444;"></button>
+                    </div>
+                    <div class="custom-color">
+                        <input type="color" id="colorPicker" value="#ffffff">
+                        <label for="colorPicker">Custom</label>
+                    </div>
+                </div>
+
+                <div class="tool-group">
+                    <h3>Size: <span id="sizeValue">8</span>px</h3>
+                    <input type="range" id="brushSize" min="1" max="50" value="8" class="size-slider">
+                </div>
+
+                <div class="tool-group">
+                    <h3>Opacity: <span id="opacityValue">100</span>%</h3>
+                    <input type="range" id="brushOpacity" min="10" max="100" value="100" class="size-slider">
+                </div>
+            </aside>
+
+            <!-- Canvas Area -->
+            <section class="canvas-section">
+                <div class="canvas-container" id="canvasContainer">
+                    <canvas id="backgroundCanvas"></canvas>
+                    <canvas id="drawingCanvas"></canvas>
+                    <div class="drop-zone" id="dropZone">
+                        <div class="drop-content">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                            <p>Drop image here, paste (Ctrl+V), or</p>
+                            <label for="fileInput" class="upload-btn">Browse Files</label>
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                        </div>
+                    </div>
+                </div>
+                <div class="canvas-actions">
+                    <button id="uploadBtn" class="action-btn secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        Upload Image
+                    </button>
+                    <button id="extractBtn" class="action-btn primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                        Extract Text (OCR)
+                    </button>
+                    <button id="saveImageBtn" class="action-btn secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Save Image
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Panel -->
+            <aside class="results-panel" id="resultsPanel">
+                <div class="results-header">
+                    <h2>Extracted Text</h2>
+                    <button id="closeResults" class="icon-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="ocr-progress" id="ocrProgress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p id="progressText">Initializing OCR...</p>
+                </div>
+                <div class="results-content" id="resultsContent">
+                    <textarea id="ocrText" placeholder="Extracted text will appear here..." readonly></textarea>
+                    <div class="confidence-display" id="confidenceDisplay">
+                        <span>Confidence:</span>
+                        <span id="confidenceValue">--%</span>
+                    </div>
+                </div>
+                <div class="results-actions">
+                    <button id="copyTextBtn" class="action-btn secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        Copy Text
+                    </button>
+                    <button id="saveTextBtn" class="action-btn secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Save as TXT
+                    </button>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Tesseract.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="src/utils.js"></script>
+    <script src="src/canvas.js"></script>
+    <script src="src/tools.js"></script>
+    <script src="src/ocr.js"></script>
+    <script src="src/main.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
